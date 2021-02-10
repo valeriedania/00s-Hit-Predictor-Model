@@ -11,7 +11,9 @@ The purpose of the data visualizarion model is to predict whether a track would 
 Tech/Framework:
 
 -Python
+
 -Bokeh (ridgeplot model)
+
 -Pandas
 
 
