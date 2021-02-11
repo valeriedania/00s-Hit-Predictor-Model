@@ -16,12 +16,12 @@ ouput_file = ('hitpredictormodel.html')
 df = pd.read_csv('/Users/Valerie/dataset-of-00s.csv')
 
 #Group track per hit factors
-grouped = df.groupby('Track')[ 'artist', 'danceability', 'energy', 'speechiness', 'liveness', 'valence', 'target'].sum() * 100
+grouped = df.groupby(['track'])[ ['artist', 'danceability', 'energy', 'speechiness', 'liveness', 'valence', 'target']].mean() 
 
 
 #Random sample in df
-sample = df.sample(50)
+#sample = df.sample(50)
 
 #Pass data into columndatasource and store sample in source
-source = ColumnDataSource(sample)
+#source = ColumnDataSource(sample)
 
