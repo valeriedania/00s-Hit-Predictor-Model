@@ -18,6 +18,7 @@ df = pd.read_csv('/Users/Valerie/dataset-of-00s.csv')
 grouped = df.groupby(['track'])[ ['danceability', 'energy', 'speechiness', 'liveness', 'valence', 'target']].mean() 
 
 #Pass data into columndatasource and store sample in source
+grouped = df.sample(20)
 source = ColumnDataSource(grouped)
 songs = source.data['track'].tolist()
 
@@ -31,9 +32,9 @@ x = linspace(-20,110, 500)
 p = figure(y_range=songs, plot_width=900, x_range=(-5, 105), toolbar_location=None)
 
 for i, song in enumerate(songs):
-    y = ridge(songs, grouped)
-    source.add(y, songs)
-    p.patch('x', songs, color=palette[i], alpha=0.6, line_color="black", source=source)
+    y = ridge(song, grouped)
+    source.add(y, song)
+    p.patch('x', song, color=palette[i], alpha=0.6, line_color="black", source=source)
 
 p.outline_line_color = None
 p.background_fill_color = "#efefef"
@@ -73,8 +74,10 @@ hover.tooltips = [
 hover.mode = 'vline'
 
 p.add_tools(hover)
-'''
+
 show(p)
+
+'''
 
 
 
