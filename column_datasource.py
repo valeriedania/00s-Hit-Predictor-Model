@@ -12,31 +12,30 @@ from bokeh.sampledata.perceptions import probly
 #Save our figure with .html extension
 ouput_file = ('hitpredictormodel.html')
 
-#From ridgeplot.py template
-def ridge(category, data, scale=20):
-    return list(zip([category]*len(data), scale*data))
-
-cats = list(reversed(probly.keys()))
-palette = [cc.rainbow[i*15] for i in range(17)]
-x = linspace(-20,110, 500)
-
 #Insert the absolute path of csv into method
 df = pd.read_csv('/Users/Valerie/dataset-of-00s.csv')
 
 #Group track per hit factors
-grouped = df.groupby(['track'])[ ['artist', 'danceability', 'energy', 'speechiness', 'liveness', 'valence', 'target']].mean() 
+grouped = df.groupby(['track'])[ ['danceability', 'energy', 'speechiness', 'liveness', 'valence', 'target']].mean() 
 
 #Pass data into columndatasource and store sample in source
 source = ColumnDataSource(grouped)
+songs = source.data['track'].tolist()
 
-p = figure(y_range=cats, plot_width=900, x_range=(-5, 105), toolbar_location=None)
+#From ridgeplot.py template
+def ridge(category, data, scale=20):
+    return list(zip([category]*len(data), scale*data))
 
-#Also from Bokeh's ridgeplot documentation
-for i, cat in enumerate(reversed(cats)):
-    pdf = gaussian_kde(probly[cat])
-    y = ridge(cat, pdf(x))
-    source.add(y, cat)
-    p.patch('x', cat, color=palette[i], alpha=0.6, line_color="black", source=source)
+palette = [cc.rainbow[i*15] for i in range(17)]
+x = linspace(-20,110, 500)
+
+p = figure(y_range=songs, plot_width=900, x_range=(-5, 105), toolbar_location=None)
+
+for i, song in enumerate(songs):
+    pdf = gaussian_kde(source)
+    y = ridge(songs, pdf(x))
+    source.add(y, songs)
+    p.patch('x', songs, color=palette[i], alpha=0.6, line_color="black", source=source)
 
 p.outline_line_color = None
 p.background_fill_color = "#efefef"
@@ -56,20 +55,26 @@ p.y_range.range_padding = 0.12
 
 #Add labels 
 p.title.text = '2000s Hit Predictor Model'
-p.xaxis.axis_label = Hit Likelihood
-p.yaxis.axis_label = Average
+p.xaxis.axis_label = 'Hit Likelihood'
+p.yaxis.axis_label = 'Average' 
 
+'''
 #Add hovertool
 hover = HoverTool()
 hover.tooltips = [
     ('track', '@track'),
-    ('artist', '@artist'),
+    #('artist', '@artist'),
     ('danceability' '@danceability'), 
     ('energy', '@energy'), 
     ('speechiness' '@speechiness'), 
     ('liveness', '@liveness'), 
-    ('valence', '@valence')
+    ('valence', '@valence'),
     ('target', '@target')
+]
 
+hover.mode = 'vline'
 
+p.add_tools(hover)
+'''
 show(p)
+
