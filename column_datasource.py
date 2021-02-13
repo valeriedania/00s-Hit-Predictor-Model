@@ -1,7 +1,6 @@
 import pandas as pd
 import colorcet as cc
 from numpy import linspace
-from scipy.stats.kde import gaussian_kde
 
 from bokeh.io import output_file, show
 from bokeh.models import ColumnDataSource, FixedTicker, PrintfTickFormatter, HoverTool
@@ -32,8 +31,7 @@ x = linspace(-20,110, 500)
 p = figure(y_range=songs, plot_width=900, x_range=(-5, 105), toolbar_location=None)
 
 for i, song in enumerate(songs):
-    pdf = gaussian_kde(source)
-    y = ridge(songs, pdf(x))
+    y = ridge(songs, grouped)
     source.add(y, songs)
     p.patch('x', songs, color=palette[i], alpha=0.6, line_color="black", source=source)
 
@@ -77,4 +75,6 @@ hover.mode = 'vline'
 p.add_tools(hover)
 '''
 show(p)
+
+
 
